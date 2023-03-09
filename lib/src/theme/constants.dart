@@ -5,7 +5,7 @@ class ThemeVariables {
   static const double sheet = 32;
   static const double header = 23;
   static const double body1 = 16;
-  static const double body2 = 16;
+  static const double body2 = 14;
 
   static const double xl = 64;
   static const double lg = 48;

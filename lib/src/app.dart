@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homely/src/screens/add.dart';
+import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/screens/home.dart';
 import 'package:homely/src/bloc/theme_bloc.dart';
 
@@ -18,7 +20,11 @@ class App extends StatelessWidget {
             title: 'home.ly',
             theme: state.themeData,
             initialRoute: Home.routeName,
-            routes: {Home.routeName: (context) => const Home()},
+            routes: {
+              Home.routeName: (context) => const Home(),
+              Details.routeName: (context) => const Details(),
+              AddPlace.routeName: (context) => const AddPlace(),
+            },
           );
         }
         return Container();

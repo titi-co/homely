@@ -5,7 +5,7 @@ enum Themes { darkTheme, lightTheme }
 
 final theme = {
   Themes.darkTheme: ThemeData(
-    colorScheme: ColorScheme(
+    colorScheme: const ColorScheme(
       brightness: Brightness.dark,
       primary: Colors.black,
       onPrimary: Colors.white,
