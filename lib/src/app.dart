@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/screens/add.dart';
 import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/screens/home.dart';
-import 'package:homely/src/bloc/theme_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -11,8 +12,15 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ThemeBloc>(
-      create: (context) => ThemeBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ThemeBloc>(
+          create: (context) => ThemeBloc(),
+        ),
+        BlocProvider<PropertiesBloc>(
+          create: (context) => PropertiesBloc()..add(PropertiesFetch()),
+        ),
+      ],
       child: BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {
         if (state is ThemeStateLoaded) {
           return MaterialApp(

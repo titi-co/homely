@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:homely/src/bloc/theme_bloc.dart';
+import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
+import 'package:homely/src/models/Property.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/theme/theme.dart';
+import 'package:homely/src/utils/image.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
   static const routeName = "/home";
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
   Widget build(BuildContext context) {
+    Future<void> _pullRefresh() async {
+      BlocProvider.of<PropertiesBloc>(context).add(PropertiesFetch());
+    }
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: ThemeVariables.md,
@@ -53,32 +65,102 @@ class Home extends StatelessWidget {
         label: const Text("Adicionar"),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "My places",
-                  style: ThemeVariables.sectionHeader,
+        child: LayoutBuilder(builder: (context, constraint) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BlocBuilder<PropertiesBloc, PropertiesBlocState>(
+                        builder: (context, state) {
+                          if (state is PropertiesBlocLoadingState) {
+                            return Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "My places",
+                                    style: ThemeVariables.sectionHeader,
+                                  ),
+                                  const SizedBox(
+                                    height: ThemeVariables.md,
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        value: null,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          if (state is PropertiesBlocLoadedState) {
+                            return SizedBox(
+                              height: constraint.maxHeight,
+                              child: RefreshIndicator(
+                                color: Theme.of(context).colorScheme.secondary,
+                                onRefresh: _pullRefresh,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: state.properties.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Property property = state.properties[index];
+
+                                    if (index == 0) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "My places",
+                                            style: ThemeVariables.sectionHeader,
+                                          ),
+                                          const SizedBox(
+                                            height: ThemeVariables.md,
+                                          ),
+                                          PropertyItem(
+                                            name: property.name,
+                                            street: property.street,
+                                            district: property.district,
+                                            image: property.image,
+                                          )
+                                        ],
+                                      );
+                                    }
+                                    return PropertyItem(
+                                      name: property.name,
+                                      street: property.street,
+                                      district: property.district,
+                                      image: property.image,
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Container();
+                        },
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: ThemeVariables.md,
-                ),
-                const PropertyItem(),
-                const SizedBox(
-                  height: ThemeVariables.md,
-                ),
-                const PropertyItem(),
-                const SizedBox(
-                  height: ThemeVariables.md,
-                ),
-                const PropertyItem()
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -87,7 +169,16 @@ class Home extends StatelessWidget {
 class PropertyItem extends StatelessWidget {
   const PropertyItem({
     super.key,
+    required this.name,
+    required this.street,
+    required this.district,
+    required this.image,
   });
+
+  final String? name;
+  final String? street;
+  final String? district;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -99,30 +190,25 @@ class PropertyItem extends StatelessWidget {
           Container(
             height: 350,
             width: double.infinity,
+            clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.red,
-              image: const DecorationImage(
-                image: NetworkImage(
-                  "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
-                ),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black26, BlendMode.darken),
-              ),
+              color: Colors.white,
             ),
+            child: ImageUtils().imageFromBase64String(base64String: image),
           ),
           const SizedBox(
             height: ThemeVariables.sm,
           ),
           Text(
-            "Manitoba, Canadá",
+            name!,
             style: ThemeVariables.bodyHeader,
           ),
           const SizedBox(
             height: ThemeVariables.xs,
           ),
           Text(
-            "Boulevard Corporate Tower, Av. dos Andradas, 3000 - Santa Efigênia, Belo Horizonte - MG, 30260-070",
+            "$street - $district",
             style: ThemeVariables.bodyRegular,
           ),
           const SizedBox(
@@ -158,10 +244,11 @@ class _ToggleModeState extends State<ToggleMode> {
   Widget build(BuildContext context) {
     return TextButton(
         style: ButtonStyle(
-            elevation: MaterialStateProperty.all<double>(0),
-            backgroundColor: MaterialStateProperty.all<Color>(isLight
-                ? ThemeVariables.darkModeColor
-                : ThemeVariables.lightModeColor)),
+          elevation: MaterialStateProperty.all<double>(0),
+          backgroundColor: MaterialStateProperty.all<Color>(isLight
+              ? ThemeVariables.darkModeColor
+              : ThemeVariables.lightModeColor),
+        ),
         onPressed: () {
           BlocProvider.of<ThemeBloc>(context).add(ThemeChanged(
               theme: isLight ? Themes.darkTheme : Themes.lightTheme));

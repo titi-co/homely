@@ -13,7 +13,7 @@ class Details extends StatelessWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-                expandedHeight: 450,
+                expandedHeight: MediaQuery.of(context).size.height / 3,
                 floating: false,
                 pinned: false,
                 title: null,
