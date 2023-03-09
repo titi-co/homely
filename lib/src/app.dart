@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/screens/add.dart';
 import 'package:homely/src/screens/details.dart';
@@ -19,6 +20,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<PropertiesBloc>(
           create: (context) => PropertiesBloc()..add(PropertiesFetch()),
+        ),
+        BlocProvider<PropertyBloc>(
+          create: (context) => PropertyBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/models/Property.dart';
 import 'package:homely/src/theme/constants.dart';
@@ -131,6 +132,7 @@ class _HomeState extends State<Home> {
                                             height: ThemeVariables.md,
                                           ),
                                           PropertyItem(
+                                            id: property.id,
                                             name: property.name,
                                             street: property.street,
                                             district: property.district,
@@ -140,6 +142,7 @@ class _HomeState extends State<Home> {
                                       );
                                     }
                                     return PropertyItem(
+                                      id: property.id,
                                       name: property.name,
                                       street: property.street,
                                       district: property.district,
@@ -169,12 +172,14 @@ class _HomeState extends State<Home> {
 class PropertyItem extends StatelessWidget {
   const PropertyItem({
     super.key,
+    required this.id,
     required this.name,
     required this.street,
     required this.district,
     required this.image,
   });
 
+  final String? id;
   final String? name;
   final String? street;
   final String? district;
@@ -183,7 +188,10 @@ class PropertyItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed("/details"),
+      onTap: () {
+        BlocProvider.of<PropertyBloc>(context).add(PropertyFetch(id: id!));
+        Navigator.of(context).pushNamed("/details");
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -193,7 +201,7 @@ class PropertyItem extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+              color: Colors.transparent,
             ),
             child: ImageUtils().imageFromBase64String(base64String: image),
           ),

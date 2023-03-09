@@ -8,7 +8,7 @@ abstract class PropertyBlocEvent extends Equatable {
 }
 
 class PropertyFetch extends PropertyBlocEvent {
-  final int id;
+  final String id;
 
   const PropertyFetch({required this.id});
 
