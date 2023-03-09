@@ -12,21 +12,103 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Container(
-              child: Padding(
-        padding: const EdgeInsets.all(ThemeVariables.sm),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "home.ly",
-              style: ThemeVariables.logo,
-            ),
-            ToggleMode()
-          ],
+      appBar: AppBar(
+        titleSpacing: ThemeVariables.md,
+        elevation: 0,
+        title: Text(
+          "home.ly",
+          style: ThemeVariables.logo,
         ),
-      ))),
+        centerTitle: false,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: ThemeVariables.md),
+            child: ToggleMode(),
+          ),
+        ],
+        bottom: const PreferredSize(
+          preferredSize: Size(double.infinity, ThemeVariables.md),
+          child: Divider(thickness: 1),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: const Text("Adicionar"),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(ThemeVariables.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Minhas propriedades",
+                    style: ThemeVariables.sectionHeader,
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  const PropertyItem(),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  const PropertyItem(),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  const PropertyItem()
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PropertyItem extends StatelessWidget {
+  const PropertyItem({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 350,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.red,
+            image: const DecorationImage(
+                image: NetworkImage(
+                  "https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/home-improvement/wp-content/uploads/2022/07/download-23.jpg",
+                ),
+                fit: BoxFit.cover,
+                colorFilter:
+                    ColorFilter.mode(Colors.black26, BlendMode.darken)),
+          ),
+        ),
+        const SizedBox(
+          height: ThemeVariables.sm,
+        ),
+        Text(
+          "Manitoba, Canadá",
+          style: ThemeVariables.bodyHeader,
+        ),
+        const SizedBox(
+          height: ThemeVariables.xs,
+        ),
+        Text(
+          "4 quartos / 3 banheiros",
+          style: ThemeVariables.bodyRegular,
+        ),
+      ],
     );
   }
 }
@@ -67,8 +149,8 @@ class _ToggleModeState extends State<ToggleMode> {
         child: Padding(
           padding: const EdgeInsets.all(ThemeVariables.xs),
           child: Icon(
-            isLight ? Icons.dark_mode : Icons.light_mode,
-            color: Colors.white,
+            isLight ? Icons.dark_mode : Icons.wb_sunny_outlined,
+            color: isLight ? Colors.white : Colors.black,
           ),
         ));
   }
