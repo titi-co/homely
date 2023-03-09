@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:homely/src/theme/constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPlace extends StatelessWidget {
   const AddPlace({super.key});
@@ -87,26 +91,69 @@ class AddPlace extends StatelessWidget {
                   const SizedBox(
                     height: ThemeVariables.md,
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Chip(
-                      labelPadding: EdgeInsets.all(8),
-                      avatar: CircleAvatar(
-                        backgroundColor: Colors.green,
-                        child: Icon(
-                          Icons.done,
-                          color: Colors.white,
-                        ),
-                      ),
-                      label: Text('Send image'),
-                    ),
-                  )
+                  ImageUploader()
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class ImageUploader extends StatefulWidget {
+  const ImageUploader({
+    super.key,
+  });
+
+  @override
+  State<ImageUploader> createState() => _ImageUploaderState();
+}
+
+class _ImageUploaderState extends State<ImageUploader> {
+  File? image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: pickImage,
+          child: Chip(
+            labelPadding: const EdgeInsets.all(8),
+            avatar: CircleAvatar(
+              backgroundColor: image != null ? Colors.green : Colors.teal,
+              child: image != null
+                  ? const Icon(
+                      Icons.done,
+                      color: Colors.white,
+                    )
+                  : const Icon(
+                      Icons.upload,
+                      color: Colors.white,
+                    ),
+            ),
+            label: Text(image != null ? image!.path : 'Send image'),
+          ),
+        ),
+        const SizedBox(
+          height: ThemeVariables.md,
+        ),
+        image != null ? Image.file(image!) : const Text("No image selected")
+      ],
     );
   }
 }
