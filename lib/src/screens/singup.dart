@@ -55,6 +55,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   _onSignUpButtonPressed() {
     widget.signUpBloc.add(SignUpButtonPressed(
@@ -83,6 +84,23 @@ class _LoginFormState extends State<LoginForm> {
                 ));
               },
             );
+
+            BlocProvider.of<SignUpBloc>(context).add((ClearError()));
+          }
+
+          if (state is SignUpSuccess) {
+            _onWidgetDidBuild(
+              () {
+                Navigator.of(context).pop();
+
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Account Created Successfully!"),
+                  backgroundColor: Colors.green,
+                ));
+              },
+            );
+
+            BlocProvider.of<SignUpBloc>(context).add((ClearError()));
           }
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -111,6 +129,7 @@ class _LoginFormState extends State<LoginForm> {
                 height: ThemeVariables.lg,
               ),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     Input(
@@ -127,9 +146,10 @@ class _LoginFormState extends State<LoginForm> {
                     const SizedBox(
                       height: ThemeVariables.md,
                     ),
-                    state is LoginLoading
+                    state is SignUpLoading
                         ? const CircularProgressIndicator(
                             value: null,
+                            color: Colors.red,
                           )
                         : Column(
                             children: [
@@ -143,9 +163,12 @@ class _LoginFormState extends State<LoginForm> {
                                                 .colorScheme
                                                 .secondary),
                                   ),
-                                  onPressed: state is! LoginLoading
-                                      ? _onSignUpButtonPressed
-                                      : null,
+                                  onPressed: () {
+                                    if (state is! SignUpLoading &&
+                                        _formKey.currentState!.validate()) {
+                                      _onSignUpButtonPressed();
+                                    }
+                                  },
                                   child: Padding(
                                     padding:
                                         const EdgeInsets.all(ThemeVariables.md),

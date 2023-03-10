@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Input extends StatelessWidget {
-  const Input(
-      {super.key,
-      required this.label,
-      this.isMultline = false,
-      required this.controller});
+  const Input({
+    super.key,
+    required this.label,
+    this.isMultline = false,
+    required this.controller,
+  });
 
   final String label;
   final bool isMultline;
@@ -13,7 +14,11 @@ class Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) return "This field cannot be empty!";
+      },
+      controller: controller,
       maxLines: isMultline ? 5 : 1,
       minLines: 1,
       cursorColor: Theme.of(context).colorScheme.brightness == Brightness.light

@@ -19,13 +19,17 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
               await auth.createUserWithEmailAndPassword(
                   email: event.username, password: event.password);
 
-          emit(SignUpInitial());
+          emit(SignUpSuccess());
         } on FirebaseAuthException catch (error) {
           emit(SignUpFailure(
               error: FireBaseUtils().getMessageFromErrorCode(error)));
         } catch (error) {
           emit(SignUpFailure(error: error.toString()));
         }
+      }
+
+      if (event is ClearError) {
+        emit(SignUpInitial());
       }
     });
   }
