@@ -4,6 +4,7 @@ import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/loginBloc/login_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
+import 'package:homely/src/bloc/signupBloc/signup_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/screens/add.dart';
 import 'package:homely/src/screens/details.dart';
@@ -41,6 +42,9 @@ class _AppState extends State<App> {
         BlocProvider<LoginBloc>(
           create: (context) =>
               LoginBloc(authBloc: BlocProvider.of<AuthBloc>(context)),
+        ),
+        BlocProvider<SignUpBloc>(
+          create: (context) => SignUpBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

@@ -40,6 +40,8 @@ dependencies:
   flutter_svg: ^2.0.2
   image_picker: ^0.8.7
   sliver_header_delegate: ^0.0.5
+  firebase_core: ^2.7.1
+  firebase_auth: ^4.2.10
 
 dev_dependencies:
   flutter_test:

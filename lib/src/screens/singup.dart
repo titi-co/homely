@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/loginBloc/login_bloc.dart';
+import 'package:homely/src/bloc/signupBloc/signup_bloc.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/input.dart';
 
@@ -16,13 +17,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  late AuthBloc _authBloc;
-  late LoginBloc _loginBloc;
-
   @override
   void initState() {
-    _authBloc = BlocProvider.of<AuthBloc>(context);
-    _loginBloc = LoginBloc(authBloc: _authBloc);
     super.initState();
   }
 
@@ -35,31 +31,22 @@ class _SignUpState extends State<SignUp> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
             child: LoginForm(
-              authBloc: _authBloc,
-              loginBloc: _loginBloc,
+              signUpBloc: BlocProvider.of<SignUpBloc>(context),
             ),
           ),
         ),
       ),
     );
   }
-
-  @override
-  void dispose() {
-    _loginBloc.close();
-    super.dispose();
-  }
 }
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
     super.key,
-    required this.authBloc,
-    required this.loginBloc,
+    required this.signUpBloc,
   });
 
-  final AuthBloc authBloc;
-  final LoginBloc loginBloc;
+  final SignUpBloc signUpBloc;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -69,8 +56,8 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  _onLoginButtonPressed() {
-    widget.loginBloc.add(LoginButtonPressed(
+  _onSignUpButtonPressed() {
+    widget.signUpBloc.add(SignUpButtonPressed(
       username: _emailController.text,
       password: _passwordController.text,
     ));
@@ -85,9 +72,9 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<LoginBloc, LoginState>(
+      body: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
-          if (state is LoginFailure) {
+          if (state is SignUpFailure) {
             _onWidgetDidBuild(
               () {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -157,7 +144,7 @@ class _LoginFormState extends State<LoginForm> {
                                                 .secondary),
                                   ),
                                   onPressed: state is! LoginLoading
-                                      ? _onLoginButtonPressed
+                                      ? _onSignUpButtonPressed
                                       : null,
                                   child: Padding(
                                     padding:
