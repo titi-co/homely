@@ -9,6 +9,7 @@ import 'package:homely/src/screens/add.dart';
 import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/screens/home.dart';
 import 'package:homely/src/screens/login.dart';
+import 'package:homely/src/screens/singup.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/loading.dart';
 
@@ -51,6 +52,7 @@ class _AppState extends State<App> {
               theme: state.themeData,
               routes: {
                 Login.routeName: (context) => const Login(),
+                SignUp.routeName: (context) => const SignUp(),
                 Home.routeName: (context) => const Home(),
                 Details.routeName: (context) => const Details(),
                 AddPlace.routeName: (context) => const AddPlace(),

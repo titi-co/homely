@@ -6,16 +6,16 @@ import 'package:homely/src/bloc/loginBloc/login_bloc.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/input.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
-  static const routeName = "/login";
+  static const routeName = "/signup";
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   late AuthBloc _authBloc;
   late LoginBloc _loginBloc;
 
@@ -115,7 +115,7 @@ class _LoginFormState extends State<LoginForm> {
                     width: ThemeVariables.xs,
                   ),
                   Text(
-                    "Login",
+                    "Create Account",
                     style: ThemeVariables.sheetTitle,
                   ),
                 ],
@@ -163,7 +163,7 @@ class _LoginFormState extends State<LoginForm> {
                                     padding:
                                         const EdgeInsets.all(ThemeVariables.md),
                                     child: Text(
-                                      "Login",
+                                      "Sign Up",
                                       style: TextStyle(
                                           color: Theme.of(context)
                                                       .colorScheme
@@ -174,30 +174,6 @@ class _LoginFormState extends State<LoginForm> {
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: ThemeVariables.md,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Don't have an account? ",
-                                    style: ThemeVariables.bodyHeader,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () =>
-                                        Navigator.pushNamed(context, "/signup"),
-                                    child: Text(
-                                      "Sign Up",
-                                      style: ThemeVariables.bodyHeader.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ],
                           ),
