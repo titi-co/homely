@@ -31,7 +31,11 @@ class PropertiesBloc extends Bloc<PropertiesBlocEvent, PropertiesBlocState> {
             }
           });
 
-          emit(PropertiesBlocLoadedState(properties: properties));
+          if (properties.isEmpty) {
+            emit(PropertiesBlocEmptyState());
+          } else {
+            emit(PropertiesBlocLoadedState(properties: properties));
+          }
         } on FirebaseAuthException catch (error) {
           emit(PropertiesFailure(
               error: FireBaseUtils().getMessageFromErrorCode(error)));

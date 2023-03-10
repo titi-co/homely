@@ -12,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (event is LoggedIn) {
         emit(AuthLoading());
-        // TODO TOKEN
+
         emit(AuthSuccess());
       }
 

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
-import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/models/property.dart';
 import 'package:homely/src/screens/details.dart';
@@ -127,6 +126,7 @@ class _HomeState extends State<Home> {
                                 onRefresh: _pullRefresh,
                                 child: ListView.builder(
                                   shrinkWrap: true,
+                                  clipBehavior: Clip.none,
                                   itemCount: state.properties.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
@@ -155,6 +155,71 @@ class _HomeState extends State<Home> {
                                     );
                                   },
                                 ),
+                              ),
+                            );
+                          }
+
+                          if (state is PropertiesBlocEmptyState) {
+                            return Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "My places",
+                                    style: ThemeVariables.sectionHeader,
+                                  ),
+                                  const SizedBox(
+                                    height: ThemeVariables.md,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "You don't have any places",
+                                          style: ThemeVariables.sectionHeader,
+                                        ),
+                                        const SizedBox(
+                                          height: ThemeVariables.md,
+                                        ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary),
+                                            ),
+                                            onPressed: () {
+                                              BlocProvider.of<PropertiesBloc>(
+                                                      context)
+                                                  .add(PropertiesFetch());
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                  ThemeVariables.md),
+                                              child: Text(
+                                                "Try again",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                              .colorScheme
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
                           }
@@ -244,11 +309,14 @@ class MissingImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ThemeVariables.redColor,
+      color: Theme.of(context).colorScheme.secondary,
       alignment: Alignment.center,
       child: Text(
         "Image missing...",
-        style: ThemeVariables.sheetTitle.copyWith(color: Colors.white),
+        style: ThemeVariables.sheetTitle.copyWith(
+            color: Theme.of(context).colorScheme.brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white),
       ),
     );
   }
