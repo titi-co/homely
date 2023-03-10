@@ -6,6 +6,7 @@ import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/models/property.dart';
+import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/theme/theme.dart';
 import 'package:homely/src/utils/image.dart';
@@ -144,21 +145,13 @@ class _HomeState extends State<Home> {
                                             height: ThemeVariables.md,
                                           ),
                                           PropertyItem(
-                                            id: property.id,
-                                            name: property.name,
-                                            street: property.street,
-                                            district: property.district,
-                                            image: property.image,
+                                            property: property,
                                           )
                                         ],
                                       );
                                     }
                                     return PropertyItem(
-                                      id: property.id,
-                                      name: property.name,
-                                      street: property.street,
-                                      district: property.district,
-                                      image: property.image,
+                                      property: property,
                                     );
                                   },
                                 ),
@@ -184,25 +177,22 @@ class _HomeState extends State<Home> {
 class PropertyItem extends StatelessWidget {
   const PropertyItem({
     super.key,
-    required this.id,
-    required this.name,
-    required this.street,
-    required this.district,
-    required this.image,
+    required this.property,
   });
 
-  final String? id;
-  final String? name;
-  final String? street;
-  final String? district;
-  final String? image;
+  final Property property;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        BlocProvider.of<PropertyBloc>(context).add(PropertyFetch(id: id!));
-        Navigator.of(context).pushNamed("/details");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Details(
+                property: property,
+              ),
+            ));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,20 +205,23 @@ class PropertyItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               color: Colors.transparent,
             ),
-            child: ImageUtils().imageFromBase64String(base64String: image),
+            child: property.image == null || property.image == ""
+                ? const MissingImage()
+                : ImageUtils()
+                    .imageFromBase64String(base64String: property.image),
           ),
           const SizedBox(
             height: ThemeVariables.sm,
           ),
           Text(
-            name!,
+            property.name!,
             style: ThemeVariables.bodyHeader,
           ),
           const SizedBox(
             height: ThemeVariables.xs,
           ),
           Text(
-            "$street - $district",
+            "${property.street} - ${property.district}",
             style: ThemeVariables.bodyRegular,
           ),
           const SizedBox(
@@ -238,6 +231,24 @@ class PropertyItem extends StatelessWidget {
             thickness: 1,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MissingImage extends StatelessWidget {
+  const MissingImage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: ThemeVariables.redColor,
+      alignment: Alignment.center,
+      child: Text(
+        "Image missing...",
+        style: ThemeVariables.sheetTitle.copyWith(color: Colors.white),
       ),
     );
   }

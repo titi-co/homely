@@ -19,3 +19,12 @@ class PropertiesBlocLoadedState extends PropertiesBlocState {
 }
 
 class PropertiesBlocEmptyState extends PropertiesBlocState {}
+
+class PropertiesFailure extends PropertiesBlocState {
+  final String error;
+
+  const PropertiesFailure({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}

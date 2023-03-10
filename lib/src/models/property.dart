@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Property {
   Property({
     this.id,
@@ -34,9 +36,8 @@ class Property {
     };
   }
 
-  Property fromJson(Map<String, dynamic> json) {
+  Property fromJson(QueryDocumentSnapshot<Object?> json) {
     return Property(
-      id: json['id'],
       name: json['name'],
       description: json['description'],
       street: json['street'],
