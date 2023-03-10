@@ -1,4 +1,4 @@
-import 'package:homely/src/models/Property.dart';
+import 'package:homely/src/models/property.dart';
 
 List<Property> properties = [
   Property(

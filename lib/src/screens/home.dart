@@ -5,7 +5,7 @@ import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
-import 'package:homely/src/models/Property.dart';
+import 'package:homely/src/models/property.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/theme/theme.dart';
 import 'package:homely/src/utils/image.dart';
@@ -70,7 +70,10 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.pushNamed(context, "/add");
+          Navigator.pushNamed(
+            context,
+            "/add",
+          );
         },
         label: const Text("Adicionar"),
       ),

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homely/src/models/Property.dart';
+import 'package:homely/src/models/property.dart';
 import 'package:homely/src/services/api_service_fake.dart';
 
 part 'property_bloc_event.dart';

@@ -1,5 +1,5 @@
 import 'package:homely/src/mock/property.dart';
-import 'package:homely/src/models/Property.dart';
+import 'package:homely/src/models/property.dart';
 import 'package:homely/src/services/api_service.dart';
 
 class APIServiceFake extends AbstractAPIService {

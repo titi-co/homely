@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
-import 'package:homely/src/models/Property.dart';
+import 'package:homely/src/models/property.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/utils/image.dart';
+import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
-class Details extends StatelessWidget {
+class Details extends StatefulWidget {
   const Details({super.key});
 
   static const routeName = "/details";
+
+  @override
+  State<Details> createState() => _DetailsState();
+}
+
+class _DetailsState extends State<Details> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,32 +42,56 @@ class Details extends StatelessWidget {
           Property property = state.property;
           return Scaffold(
             body: NestedScrollView(
+              physics: const ClampingScrollPhysics(),
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
-                  SliverAppBar(
-                      expandedHeight: MediaQuery.of(context).size.height / 3,
-                      floating: false,
-                      pinned: false,
-                      title: null,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Container(
-                              child: ImageUtils().imageFromBase64String(
-                                base64String: state.property.image,
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                      context,
+                    ),
+                    sliver: SliverPersistentHeader(
+                      pinned: true,
+                      delegate: FlexibleHeaderDelegate(
+                        leading: Padding(
+                          padding: const EdgeInsets.only(left: 8, top: 8),
+                          child: GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceVariant,
                               ),
-                            )
-                          ],
+                              alignment: Alignment.center,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.arrow_back,
+                                  size: ThemeVariables.header,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ))
+                        collapsedElevation: 1,
+                        statusBarHeight: MediaQuery.of(context).padding.top,
+                        expandedHeight: MediaQuery.of(context).size.height / 3,
+                        background: MutableBackground(
+                          expandedWidget: ImageUtils().imageFromBase64String(
+                              base64String: state.property.image),
+                        ),
+                      ),
+                    ),
+                  ),
                 ];
               },
               body: SingleChildScrollView(
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: ThemeVariables.md),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ThemeVariables.md,
+                        vertical: MediaQuery.of(context).padding.top +
+                            ThemeVariables.md),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
