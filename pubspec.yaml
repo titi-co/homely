@@ -42,6 +42,7 @@ dependencies:
   sliver_header_delegate: ^0.0.5
   firebase_core: ^2.7.1
   firebase_auth: ^4.2.10
+  cloud_firestore: ^4.4.4
 
 dev_dependencies:
   flutter_test:

@@ -14,7 +14,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           emit(SignUpLoading());
 
           final FirebaseAuth auth = FirebaseAuth.instance;
-          // TODO: GET TOKEN
+
           UserCredential userCredential =
               await auth.createUserWithEmailAndPassword(
                   email: event.username, password: event.password);

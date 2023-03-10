@@ -12,6 +12,14 @@ class FireBaseUtils {
       return "Email already in use - ${error.message}";
     }
 
+    if (error.code == "wrong-password") {
+      return "Wrong Password - ${error.message}";
+    }
+
+    if (error.code == "user-not-found") {
+      return "Account not found - ${error.message}";
+    }
+
     return "Something went wrong...";
   }
 }

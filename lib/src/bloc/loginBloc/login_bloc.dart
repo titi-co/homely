@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
+import 'package:homely/src/utils/firebase.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -15,12 +18,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginLoading());
 
         try {
+          final FirebaseAuth auth = FirebaseAuth.instance;
+
           // TODO: GET TOKEN
-          authBloc.add(const LoggedIn(token: "TOKEN"));
+          UserCredential userCredential = await auth.signInWithEmailAndPassword(
+              email: event.username, password: event.password);
+
+          authBloc.add(LoggedIn());
           emit(LoginInitial());
+        } on FirebaseAuthException catch (error) {
+          emit(LoginFailure(
+              error: FireBaseUtils().getMessageFromErrorCode(error)));
         } catch (error) {
-          emit(LoginFailure(error: error.toString()));
+          print(error);
+          //emit(SignUpFailure(error: error.toString()));
         }
+      }
+
+      if (event is ClearError) {
+        emit(LoginInitial());
       }
     });
   }

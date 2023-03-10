@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
-import 'package:homely/src/bloc/loginBloc/login_bloc.dart';
 import 'package:homely/src/bloc/signupBloc/signup_bloc.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/input.dart';
@@ -27,6 +25,9 @@ class _SignUpState extends State<SignUp> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),

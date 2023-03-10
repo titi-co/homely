@@ -16,16 +16,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  late AuthBloc _authBloc;
-  late LoginBloc _loginBloc;
-
-  @override
-  void initState() {
-    _authBloc = BlocProvider.of<AuthBloc>(context);
-    _loginBloc = LoginBloc(authBloc: _authBloc);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -35,19 +25,13 @@ class _LoginState extends State<Login> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
             child: LoginForm(
-              authBloc: _authBloc,
-              loginBloc: _loginBloc,
+              authBloc: BlocProvider.of<AuthBloc>(context),
+              loginBloc: BlocProvider.of<LoginBloc>(context),
             ),
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _loginBloc.close();
-    super.dispose();
   }
 }
 
@@ -96,6 +80,8 @@ class _LoginFormState extends State<LoginForm> {
                 ));
               },
             );
+
+            BlocProvider.of<LoginBloc>(context).add((ClearError()));
           }
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -141,8 +127,9 @@ class _LoginFormState extends State<LoginForm> {
                       height: ThemeVariables.md,
                     ),
                     state is LoginLoading
-                        ? const CircularProgressIndicator(
+                        ? CircularProgressIndicator(
                             value: null,
+                            color: Theme.of(context).colorScheme.secondary,
                           )
                         : Column(
                             children: [

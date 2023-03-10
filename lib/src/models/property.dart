@@ -8,6 +8,7 @@ class Property {
     this.city,
     this.state,
     this.image,
+    this.uid,
   });
 
   String? id;
@@ -18,10 +19,10 @@ class Property {
   String? city;
   String? state;
   String? image;
+  String? uid;
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'description': description,
       'street': street,
@@ -29,6 +30,7 @@ class Property {
       'city': city,
       'state': state,
       'image': image,
+      'uid': uid,
     };
   }
 
@@ -42,6 +44,7 @@ class Property {
       city: json['city'],
       state: json['state'],
       image: json['image'],
+      uid: json['uid'],
     );
   }
 }
