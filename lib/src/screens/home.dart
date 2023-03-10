@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
@@ -48,10 +49,18 @@ class _HomeState extends State<Home> {
           ],
         ),
         centerTitle: false,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: ThemeVariables.md),
-            child: ToggleMode(),
+            padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
+            child: Row(
+              children: const [
+                ToggleMode(),
+                SizedBox(
+                  width: ThemeVariables.sm,
+                ),
+                SignOut(),
+              ],
+            ),
           ),
         ],
         bottom: const PreferredSize(
@@ -270,6 +279,44 @@ class _ToggleModeState extends State<ToggleMode> {
           child: Icon(
             isLight ? Icons.dark_mode : Icons.wb_sunny_outlined,
             color: isLight ? Colors.white : Colors.black,
+          ),
+        ));
+  }
+}
+
+class SignOut extends StatefulWidget {
+  const SignOut({
+    super.key,
+  });
+
+  @override
+  State<SignOut> createState() => _SignOutState();
+}
+
+class _SignOutState extends State<SignOut> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        style: ButtonStyle(
+          elevation: MaterialStateProperty.all<double>(0),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              Theme.of(context).colorScheme.secondary),
+        ),
+        onPressed: () {
+          BlocProvider.of<AuthBloc>(context).add(LoggedOut());
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(ThemeVariables.xs),
+          child: Icon(
+            Icons.logout,
+            color: Theme.of(context).colorScheme.brightness == Brightness.light
+                ? Colors.white
+                : Colors.black,
           ),
         ));
   }

@@ -5,12 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:homely/src/theme/constants.dart';
+import 'package:homely/src/widgets/input.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddPlace extends StatelessWidget {
+class AddPlace extends StatefulWidget {
   const AddPlace({super.key});
 
   static const routeName = "/add";
+
+  @override
+  State<AddPlace> createState() => _AddPlaceState();
+}
+
+class _AddPlaceState extends State<AddPlace> {
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,38 +62,44 @@ class AddPlace extends StatelessWidget {
                   const SizedBox(
                     height: ThemeVariables.lg,
                   ),
-                  const AddField(
+                  Input(
+                    controller: controller,
                     label: "Place name",
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: ThemeVariables.md,
                   ),
-                  const AddField(
+                  Input(
+                    controller: controller,
                     label: "Description",
                     isMultline: true,
                   ),
                   const SizedBox(
                     height: ThemeVariables.md,
                   ),
-                  const AddField(
+                  Input(
+                    controller: controller,
                     label: "Street",
                   ),
                   const SizedBox(
                     height: ThemeVariables.md,
                   ),
-                  const AddField(
+                  Input(
+                    controller: controller,
                     label: "District",
                   ),
                   const SizedBox(
                     height: ThemeVariables.md,
                   ),
-                  const AddField(
+                  Input(
+                    controller: controller,
                     label: "City",
                   ),
                   const SizedBox(
                     height: ThemeVariables.md,
                   ),
-                  const AddField(
+                  Input(
+                    controller: controller,
                     label: "State",
                   ),
                   const SizedBox(
@@ -154,31 +168,6 @@ class _ImageUploaderState extends State<ImageUploader> {
         ),
         image != null ? Image.file(image!) : const Text("No image selected")
       ],
-    );
-  }
-}
-
-class AddField extends StatelessWidget {
-  const AddField({super.key, required this.label, this.isMultline = false});
-
-  final String label;
-  final bool isMultline;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      maxLines: isMultline ? 5 : 1,
-      minLines: 1,
-      decoration: InputDecoration(
-        floatingLabelStyle: const TextStyle(color: Colors.black),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        labelText: label,
-      ),
     );
   }
 }
