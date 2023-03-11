@@ -34,7 +34,10 @@ class FirebasePropertyRepository implements PropertyRepository {
 
       await propertiesCollection
           .add(property
-              .copyWith(uid: auth.currentUser!.uid, image: url)
+              .copyWith(
+                uid: auth.currentUser!.uid,
+                image: url,
+              )
               .toEntity()
               .toDocument())
           .then((value) {
@@ -91,20 +94,25 @@ class FirebasePropertyRepository implements PropertyRepository {
   }
 
   @override
-  Future<void> updateProperty(Property update, File image) async {
+  Future<void> updateProperty(Property update, File? image) async {
     try {
-      var snapshot = await firebaseStorage
-          .ref()
-          .child(
-              'images/${auth.currentUser!.uid} - ${DateTime.now().toString()}')
-          .putFile(image);
+      var url = "";
+      if (image != null) {
+        var snapshot = await firebaseStorage
+            .ref()
+            .child(
+                'images/${auth.currentUser!.uid} - ${DateTime.now().toString()}')
+            .putFile(image);
 
-      var url = await snapshot.ref.getDownloadURL();
+        url = await snapshot.ref.getDownloadURL();
+      }
 
       await propertiesCollection
           .doc(update.id)
           .update(update
-              .copyWith(uid: auth.currentUser!.uid, image: url)
+              .copyWith(
+                  uid: auth.currentUser!.uid,
+                  image: url == "" ? update.image : url)
               .toEntity()
               .toDocument())
           .then((value) {

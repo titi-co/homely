@@ -1,14 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/containers/add_form_container.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/theme/constants.dart';
-import 'package:homely/src/widgets/input.dart';
 import 'package:homely/src/widgets/image_uploader.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddPlace extends StatefulWidget {
   const AddPlace({super.key});
@@ -67,7 +64,9 @@ class _AddPlaceState extends State<AddPlace> {
         return GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
-            appBar: AppBar(elevation: 0),
+            appBar: AppBar(
+              elevation: 0,
+            ),
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.all(ThemeVariables.md),
               child: FilledButton(
@@ -76,7 +75,7 @@ class _AddPlaceState extends State<AddPlace> {
                       Theme.of(context).colorScheme.secondary),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
+                  if (_formKey.currentState!.validate() && image != null) {
                     _onAddButtonPressed();
                   }
                 },
@@ -85,10 +84,11 @@ class _AddPlaceState extends State<AddPlace> {
                   child: Text(
                     "Add place",
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.brightness ==
-                                Brightness.dark
-                            ? Colors.black
-                            : Colors.white),
+                      color: Theme.of(context).colorScheme.brightness ==
+                              Brightness.dark
+                          ? Colors.black
+                          : Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -104,70 +104,25 @@ class _AddPlaceState extends State<AddPlace> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Add place",
-                          style: ThemeVariables.sheetTitle,
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.lg,
-                        ),
-                        Input(
-                          maxLength: 24,
-                          capitalization: TextCapitalization.sentences,
-                          controller: nameController,
-                          label: "Place name",
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.md,
-                        ),
-                        Input(
-                          type: TextInputType.multiline,
-                          capitalization: TextCapitalization.sentences,
-                          controller: descriptionController,
-                          label: "Description",
-                          isMultline: true,
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.md,
-                        ),
-                        Input(
-                          maxLength: 20,
-                          capitalization: TextCapitalization.sentences,
-                          controller: streetController,
-                          label: "Street",
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.md,
-                        ),
-                        Input(
-                          maxLength: 20,
-                          capitalization: TextCapitalization.sentences,
-                          controller: districtController,
-                          label: "District",
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.md,
-                        ),
-                        Input(
-                          maxLength: 20,
-                          capitalization: TextCapitalization.sentences,
-                          controller: cityController,
-                          label: "City",
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.md,
-                        ),
-                        Input(
-                          maxLength: 20,
-                          capitalization: TextCapitalization.sentences,
-                          controller: stateController,
-                          label: "State",
-                        ),
-                        const SizedBox(
-                          height: ThemeVariables.md,
+                        AddFormContainer(
+                          nameController: nameController,
+                          descriptionController: descriptionController,
+                          streetController: streetController,
+                          districtController: districtController,
+                          cityController: cityController,
+                          stateController: stateController,
                         ),
                         ImageUploader(
-                            callback: (value) => setState(() => image = value))
+                          callback: (value) => setState(() => image = value),
+                        ),
+                        image == null
+                            ? Text(
+                                "Please send an image",
+                                style: ThemeVariables.bodyRegular.copyWith(
+                                  color: Colors.red,
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                   ),

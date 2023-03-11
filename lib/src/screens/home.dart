@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
-import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
+import 'package:homely/src/containers/properties_empty_container.dart';
 import 'package:homely/src/containers/properties_loading_container.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/theme/constants.dart';
-import 'package:homely/src/theme/theme.dart';
-import 'package:homely/src/utils/image.dart';
-import 'package:homely/src/widgets/missing_image.dart';
 import 'package:homely/src/widgets/property_item.dart';
 import 'package:homely/src/widgets/signout_button.dart';
 import 'package:homely/src/widgets/toggle_mode.dart';
@@ -102,73 +98,7 @@ class _HomeState extends State<Home> {
 
                           if (state is PropertiesBlocLoadedState) {
                             return state.properties.isEmpty
-                                ? Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "My places",
-                                          style: ThemeVariables.sectionHeader,
-                                        ),
-                                        const SizedBox(
-                                          height: ThemeVariables.md,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "You don't have any places",
-                                                style: ThemeVariables
-                                                    .sectionHeader,
-                                              ),
-                                              const SizedBox(
-                                                height: ThemeVariables.md,
-                                              ),
-                                              SizedBox(
-                                                width: double.infinity,
-                                                child: ElevatedButton(
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                                Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .secondary),
-                                                  ),
-                                                  onPressed: () {
-                                                    BlocProvider.of<
-                                                                PropertiesBloc>(
-                                                            context)
-                                                        .add(PropertiesFetch());
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            ThemeVariables.md),
-                                                    child: Text(
-                                                      "Try again",
-                                                      style: TextStyle(
-                                                        color: Theme.of(context)
-                                                                    .colorScheme
-                                                                    .brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                ? const PropertiesEmptyContainer()
                                 : SizedBox(
                                     height: constraint.maxHeight,
                                     child: RefreshIndicator(
@@ -245,38 +175,6 @@ class _HomeState extends State<Home> {
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-class a extends StatelessWidget {
-  const a({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "My places",
-            style: ThemeVariables.sectionHeader,
-          ),
-          const SizedBox(
-            height: ThemeVariables.md,
-          ),
-          Expanded(
-            child: Center(
-              child: CircularProgressIndicator(
-                value: null,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

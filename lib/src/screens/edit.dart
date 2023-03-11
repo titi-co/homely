@@ -1,16 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/containers/edit_form_container.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/theme/constants.dart';
-import 'package:homely/src/utils/image.dart';
 import 'package:homely/src/widgets/image_uploader.dart';
-import 'package:homely/src/widgets/input.dart';
-import 'package:homely/src/widgets/missing_image.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditPlace extends StatefulWidget {
   const EditPlace({super.key, this.property});
@@ -49,7 +44,7 @@ class _AddPlaceState extends State<EditPlace> {
           widget.property!.image,
           "",
         ),
-        imageFile!,
+        imageFile,
       ),
     );
   }
@@ -83,6 +78,9 @@ class _AddPlaceState extends State<EditPlace> {
         return GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+            ),
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.all(ThemeVariables.md),
               child: FilledButton(
@@ -96,10 +94,11 @@ class _AddPlaceState extends State<EditPlace> {
                   child: Text(
                     "Edit place",
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.brightness ==
-                                Brightness.dark
-                            ? Colors.black
-                            : Colors.white),
+                      color: Theme.of(context).colorScheme.brightness ==
+                              Brightness.dark
+                          ? Colors.black
+                          : Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -113,55 +112,13 @@ class _AddPlaceState extends State<EditPlace> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Edit place",
-                        style: ThemeVariables.sheetTitle,
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.lg,
-                      ),
-                      Input(
-                        controller: nameController,
-                        label: "Place name",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: descriptionController,
-                        label: "Description",
-                        isMultline: true,
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: streetController,
-                        label: "Street",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: districtController,
-                        label: "District",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: cityController,
-                        label: "City",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: stateController,
-                        label: "State",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
+                      EditFormContainer(
+                        nameController: nameController,
+                        descriptionController: descriptionController,
+                        streetController: streetController,
+                        districtController: districtController,
+                        cityController: cityController,
+                        stateController: stateController,
                       ),
                       ImageUploader(
                         callback: (value) => setState(() => imageFile = value),

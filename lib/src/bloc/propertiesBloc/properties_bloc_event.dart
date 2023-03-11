@@ -30,7 +30,7 @@ class PropertyAdd extends PropertiesBlocEvent {
 
 class PropertyUpdate extends PropertiesBlocEvent {
   final Property property;
-  final File image;
+  final File? image;
 
   const PropertyUpdate(this.property, this.image);
 }

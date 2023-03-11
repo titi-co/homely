@@ -9,5 +9,5 @@ abstract class PropertyRepository {
 
   Stream<List<Property>> properties();
 
-  Future<void> updateProperty(Property property, File image);
+  Future<void> updateProperty(Property property, File? image);
 }
