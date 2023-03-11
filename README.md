@@ -1,16 +1,27 @@
-# homely
+# Homely
 
-A new Flutter project.
+## Sobre o projeto
 
-## Getting Started
+Este projeto foi realizado para solucionar o desafio técnico da Group Software para a vaga de Desenvolvedor Flutter.
 
-This project is a starting point for a Flutter application.
+## Proposta
 
-A few resources to get you started if this is your first Flutter project:
+O desafio consiste em desenvolver, utilizando Flutter, um aplicativo para gerir informações sobre uma propriedade. Assim, temos como funções: Logar e deslogar, cadastrar uma propriedade com foto da camera, editar e excluir uma propriedade.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Instalação
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Clone o repositório abaixo:
+
+```
+https://github.com/titi-co/homely
+```
+
+Para rodar:
+
+```
+$ flutter run
+```
+
+## Arquitetura
+
+O gerenciamento das propriedades e da autenticação foi feito com arquitetura bloc, utilizando repositorios.
