@@ -9,6 +9,7 @@ import 'package:homely/src/bloc/signupBloc/signup_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/screens/add.dart';
 import 'package:homely/src/screens/details.dart';
+import 'package:homely/src/screens/edit.dart';
 import 'package:homely/src/screens/home.dart';
 import 'package:homely/src/screens/login.dart';
 import 'package:homely/src/screens/singup.dart';
@@ -70,6 +71,7 @@ class _AppState extends State<App> {
                 Home.routeName: (context) => const Home(),
                 Details.routeName: (context) => const Details(),
                 AddPlace.routeName: (context) => const AddPlace(),
+                EditPlace.routeName: (context) => const EditPlace(),
               },
               home: BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {

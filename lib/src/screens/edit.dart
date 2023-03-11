@@ -6,21 +6,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/theme/constants.dart';
+import 'package:homely/src/utils/image.dart';
 import 'package:homely/src/widgets/input.dart';
+import 'package:homely/src/widgets/missing_image.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddPlace extends StatefulWidget {
-  const AddPlace({super.key, required this.property});
+class EditPlace extends StatefulWidget {
+  const EditPlace({super.key, this.property});
 
-  final Property property;
+  final Property? property;
 
-  static const routeName = "/add";
+  static const routeName = "/edit";
 
   @override
-  State<AddPlace> createState() => _AddPlaceState();
+  State<EditPlace> createState() => _AddPlaceState();
 }
 
-class _AddPlaceState extends State<AddPlace> {
+class _AddPlaceState extends State<EditPlace> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final streetController = TextEditingController();
@@ -31,27 +33,34 @@ class _AddPlaceState extends State<AddPlace> {
 
   set string(String value) => setState(() => image = value);
 
-  void _onWidgetDidBuild(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
-  }
-
-  _onAddButtonPressed() {
+  _onEditButtonPressed() {
     BlocProvider.of<PropertiesBloc>(context).add(
-      PropertyAdd(
+      PropertyUpdate(
         Property(
-            "",
-            nameController.text,
-            descriptionController.text,
-            streetController.text,
-            districtController.text,
-            cityController.text,
-            stateController.text,
-            image,
-            ""),
+          widget.property!.id,
+          nameController.text,
+          descriptionController.text,
+          streetController.text,
+          districtController.text,
+          cityController.text,
+          stateController.text,
+          image,
+          "",
+        ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    nameController.text = widget.property!.name;
+    descriptionController.text = widget.property!.description;
+    streetController.text = widget.property!.street;
+    districtController.text = widget.property!.district;
+    cityController.text = widget.property!.city;
+    stateController.text = widget.property!.state;
+    image = widget.property!.image;
+    super.initState();
   }
 
   @override
@@ -66,7 +75,7 @@ class _AddPlaceState extends State<AddPlace> {
               backgroundColor: MaterialStateProperty.all<Color>(
                   Theme.of(context).colorScheme.secondary),
             ),
-            onPressed: _onAddButtonPressed,
+            onPressed: _onEditButtonPressed,
             child: Padding(
               padding: const EdgeInsets.all(ThemeVariables.md),
               child: Text(
@@ -90,7 +99,7 @@ class _AddPlaceState extends State<AddPlace> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Add place",
+                    "Edit place",
                     style: ThemeVariables.sheetTitle,
                   ),
                   const SizedBox(
@@ -140,7 +149,9 @@ class _AddPlaceState extends State<AddPlace> {
                     height: ThemeVariables.md,
                   ),
                   ImageUploader(
-                      callback: (value) => setState(() => image = value))
+                    propertyImage: image,
+                    callback: (value) => setState(() => image = value),
+                  )
                 ],
               ),
             ),
@@ -157,9 +168,11 @@ class ImageUploader extends StatefulWidget {
   const ImageUploader({
     super.key,
     required this.callback,
+    this.propertyImage,
   });
 
   final StringCallback callback;
+  final String? propertyImage;
 
   @override
   State<ImageUploader> createState() => _ImageUploaderState();
@@ -176,8 +189,6 @@ class _ImageUploaderState extends State<ImageUploader> {
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
       List<int> imageBytes = await this.image!.readAsBytes();
-
-      print(imageBytes.length);
 
       String base64Image = base64Encode(imageBytes);
 
@@ -216,7 +227,13 @@ class _ImageUploaderState extends State<ImageUploader> {
         const SizedBox(
           height: ThemeVariables.md,
         ),
-        image != null ? Image.file(image!) : const Text("No image selected")
+        widget.propertyImage != null
+            ? ImageUtils().imageFromBase64String(
+                    base64String: widget.propertyImage) ??
+                const MissingImage()
+            : image != null
+                ? Image.file(image!)
+                : const Text("No image selected")
       ],
     );
   }

@@ -32,30 +32,9 @@ class PropertiesBloc extends Bloc<PropertiesBlocEvent, PropertiesBlocState> {
         propertyRepository.deleteProperty(event.id);
       } else if (event is PropertyAdd) {
         propertyRepository.addProperty(event.property);
+      } else if (event is PropertyUpdate) {
+        propertyRepository.updateProperty(event.property);
       }
     });
-  }
-
-  Stream<PropertiesBlocState> _mapPropertyFetchToState() async* {
-    _propertySubscription?.cancel();
-    _propertySubscription = propertyRepository.properties().listen(
-      (todos) {
-        add(
-          PropertiesUpdated(todos),
-        );
-      },
-    );
-  }
-
-  Stream<PropertiesBlocState> _mapPropertyUpdateToState(
-      PropertiesUpdated event) async* {
-    yield (PropertiesBlocLoadedState(properties: event.properties));
-  }
-
-  // Added
-  @override
-  Future<void> close() async {
-    await _propertySubscription?.cancel();
-    return super.close();
   }
 }

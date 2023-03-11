@@ -26,3 +26,9 @@ class PropertyAdd extends PropertiesBlocEvent {
 
   const PropertyAdd(this.property);
 }
+
+class PropertyUpdate extends PropertiesBlocEvent {
+  final Property property;
+
+  const PropertyUpdate(this.property);
+}

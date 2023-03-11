@@ -84,7 +84,10 @@ class FirebasePropertyRepository implements PropertyRepository {
     try {
       await propertiesCollection
           .doc(update.id)
-          .update(update.toEntity().toDocument())
+          .update(update
+              .copyWith(uid: auth.currentUser!.uid)
+              .toEntity()
+              .toDocument())
           .then((value) {
         NavigationService.instance.goback();
         SnackBarService.instance

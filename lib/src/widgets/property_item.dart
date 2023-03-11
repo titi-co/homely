@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/screens/details.dart';
+import 'package:homely/src/screens/edit.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/utils/image.dart';
 import 'package:homely/src/widgets/missing_image.dart';
@@ -34,7 +35,7 @@ class PropertyItem extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ImageUtils().imageFromBase64String(
                           base64String: property.image, fit: BoxFit.cover) ??
@@ -43,23 +44,53 @@ class PropertyItem extends StatelessWidget {
                 Positioned(
                   bottom: ThemeVariables.sm,
                   right: ThemeVariables.sm,
-                  child: GestureDetector(
-                    onTap: () {
-                      BlocProvider.of<PropertiesBloc>(context)
-                          .add(PropertiesDelete(property.id));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        ThemeVariables.xs,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return EditPlace(
+                                property: property,
+                              );
+                            },
+                          ));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            ThemeVariables.xs,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                          ),
+                          child: const Icon(
+                            Icons.edit,
+                          ),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Theme.of(context).colorScheme.surfaceVariant,
+                      const SizedBox(
+                        width: ThemeVariables.sm,
                       ),
-                      child: const Icon(
-                        Icons.delete_outline,
+                      GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<PropertiesBloc>(context)
+                              .add(PropertiesDelete(property.id));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            ThemeVariables.xs,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
