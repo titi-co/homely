@@ -26,12 +26,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  void _onWidgetDidBuild(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
-  }
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -90,19 +84,6 @@ class _AppState extends State<App> {
 
                   if (state is AuthLoading) {
                     return const Loading();
-                  }
-
-                  if (state is AuthFailure) {
-                    _onWidgetDidBuild(
-                      () {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(state.error),
-                          backgroundColor: Colors.red,
-                        ));
-                      },
-                    );
-
-                    BlocProvider.of<AuthBloc>(context).add((ClearAuthState()));
                   }
 
                   return Container();

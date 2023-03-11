@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
             "/add",
           );
         },
-        label: const Text("Adicionar"),
+        label: const Text("Add place"),
       ),
       body: SafeArea(
         child: LayoutBuilder(builder: (context, constraint) {
@@ -199,6 +199,8 @@ class _HomeState extends State<Home> {
                                           .secondary,
                                       onRefresh: pullRefresh,
                                       child: ListView.builder(
+                                        addAutomaticKeepAlives: false,
+                                        addRepaintBoundaries: false,
                                         shrinkWrap: true,
                                         clipBehavior: Clip.none,
                                         itemCount: state.properties.length,

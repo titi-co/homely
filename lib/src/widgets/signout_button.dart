@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
+import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/theme/constants.dart';
 
 class SignOut extends StatefulWidget {
@@ -31,6 +32,7 @@ class _SignOutState extends State<SignOut> {
               Theme.of(context).colorScheme.secondary),
         ),
         onPressed: () {
+          BlocProvider.of<PropertiesBloc>(context).close();
           BlocProvider.of<AuthBloc>(context).add(LoggedOut());
         },
         child: Padding(
