@@ -5,7 +5,8 @@ enum Themes { darkTheme, lightTheme }
 
 final theme = {
   Themes.darkTheme: ThemeData(
-    colorScheme: const ColorScheme(
+    scaffoldBackgroundColor: Colors.grey[850],
+    colorScheme: ColorScheme(
       brightness: Brightness.dark,
       primary: Colors.black,
       onPrimary: Colors.white,
@@ -13,9 +14,9 @@ final theme = {
       // Colors that are not relevant to AppBar in LIGHT mode:
       secondary: Colors.tealAccent,
       onSecondary: Colors.black,
-      background: Colors.grey,
+      background: Colors.grey.shade900,
       onBackground: Colors.grey,
-      surface: Colors.transparent,
+      surface: Colors.grey[850] ?? Colors.grey.shade900,
       onSurface: Colors.white,
       error: Colors.red,
       onError: Colors.grey,

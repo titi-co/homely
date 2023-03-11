@@ -270,10 +270,34 @@ class PropertyItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               color: Colors.transparent,
             ),
-            child: property.image == null || property.image == ""
-                ? const MissingImage()
-                : ImageUtils()
-                    .imageFromBase64String(base64String: property.image),
+            child: Stack(
+              children: [
+                if (property.image == null || property.image == "")
+                  const MissingImage()
+                else
+                  ImageUtils().imageFromBase64String(
+                          base64String: property.image) ??
+                      const MissingImage(),
+                Positioned(
+                  bottom: ThemeVariables.sm,
+                  right: ThemeVariables.sm,
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.all(
+                        ThemeVariables.xs,
+                      ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Theme.of(context).colorScheme.surfaceVariant),
+                      child: const Icon(
+                        Icons.delete_outline,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: ThemeVariables.sm,
