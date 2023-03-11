@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:homely/src/models/property.dart';
+import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/screens/home.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/utils/image.dart';

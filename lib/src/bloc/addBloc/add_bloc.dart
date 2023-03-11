@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/mock/property.dart';
-import 'package:homely/src/models/property.dart';
+import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/utils/firebase.dart';
 
 part 'add_event.dart';
@@ -17,6 +17,7 @@ class AddBloc extends Bloc<AddEvent, AddState> {
         emit(AddLoading());
 
         try {
+          /*
           final auth = FirebaseAuth.instance;
 
           Property propertyObject = Property(
@@ -34,6 +35,7 @@ class AddBloc extends Bloc<AddEvent, AddState> {
           await propertiesCollection.add(propertyObject.toJson());
 
           emit(AddSuccess());
+          */
         } on FirebaseAuthException catch (error) {
           emit(AddFailure(
               error: FireBaseUtils().getMessageFromErrorCode(error)));

@@ -1,48 +1,61 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homely/src/models/property.dart';
-import 'package:homely/src/utils/firebase.dart';
+import 'package:homely/propertyRepository/property_repository.dart';
+import 'package:homely/src/models/property_model.dart';
 
 part 'properties_bloc_event.dart';
 part 'properties_bloc_state.dart';
 
 class PropertiesBloc extends Bloc<PropertiesBlocEvent, PropertiesBlocState> {
-  PropertiesBloc() : super(PropertiesBlocLoadingState()) {
+  late final PropertyRepository propertyRepository;
+  StreamSubscription? _propertySubscription;
+
+  PropertiesBloc({required PropertyRepository propertyRepository})
+      : super(PropertiesBlocLoadingState()) {
     on<PropertiesBlocEvent>((event, emit) async {
       if (event is PropertiesFetch) {
         emit(PropertiesBlocLoadingState());
-
-        try {
-          final auth = FirebaseAuth.instance;
-
-          final propertiesCollection =
-              FirebaseFirestore.instance.collection('properties');
-
-          List<Property> properties = List.empty(growable: true);
-
-          await propertiesCollection
-              .where("uid", isEqualTo: auth.currentUser!.uid)
-              .get()
-              .then((QuerySnapshot querySnapshot) {
-            for (var doc in querySnapshot.docs) {
-              properties.add(Property().fromJson(doc));
-            }
-          });
-
-          if (properties.isEmpty) {
-            emit(PropertiesBlocEmptyState());
-          } else {
-            emit(PropertiesBlocLoadedState(properties: properties));
-          }
-        } on FirebaseAuthException catch (error) {
-          emit(PropertiesFailure(
-              error: FireBaseUtils().getMessageFromErrorCode(error)));
-        } catch (error) {
-          emit(PropertiesFailure(error: error.toString()));
-        }
+        _propertySubscription?.cancel();
+        _propertySubscription = propertyRepository.properties().listen(
+          (todos) {
+            add(
+              PropertiesUpdated(todos),
+            );
+          },
+        );
+      } else if (event is PropertiesUpdated) {
+        emit((PropertiesBlocLoadedState(properties: event.properties)));
+      } else if (event is PropertiesDelete) {
+        propertyRepository.deleteProperty(event.id);
+      } else if (event is PropertyAdd) {
+        propertyRepository.addProperty(event.property);
       }
     });
+  }
+
+  Stream<PropertiesBlocState> _mapPropertyFetchToState() async* {
+    _propertySubscription?.cancel();
+    _propertySubscription = propertyRepository.properties().listen(
+      (todos) {
+        add(
+          PropertiesUpdated(todos),
+        );
+      },
+    );
+  }
+
+  Stream<PropertiesBlocState> _mapPropertyUpdateToState(
+      PropertiesUpdated event) async* {
+    yield (PropertiesBlocLoadedState(properties: event.properties));
+  }
+
+  // Added
+  @override
+  Future<void> close() async {
+    await _propertySubscription?.cancel();
+    return super.close();
   }
 }

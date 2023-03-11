@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
-import 'package:homely/src/models/property.dart';
+import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/theme/theme.dart';
@@ -22,7 +22,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    Future<void> _pullRefresh() async {
+    Future<void> pullRefresh() async {
       BlocProvider.of<PropertiesBloc>(context).add(PropertiesFetch());
     }
 
@@ -119,44 +119,116 @@ class _HomeState extends State<Home> {
                           }
 
                           if (state is PropertiesBlocLoadedState) {
-                            return SizedBox(
-                              height: constraint.maxHeight,
-                              child: RefreshIndicator(
-                                color: Theme.of(context).colorScheme.secondary,
-                                onRefresh: _pullRefresh,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  clipBehavior: Clip.none,
-                                  itemCount: state.properties.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    Property property = state.properties[index];
+                            return state.properties.isEmpty
+                                ? Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "My places",
+                                          style: ThemeVariables.sectionHeader,
+                                        ),
+                                        const SizedBox(
+                                          height: ThemeVariables.md,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "You don't have any places",
+                                                style: ThemeVariables
+                                                    .sectionHeader,
+                                              ),
+                                              const SizedBox(
+                                                height: ThemeVariables.md,
+                                              ),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .secondary),
+                                                  ),
+                                                  onPressed: () {
+                                                    BlocProvider.of<
+                                                                PropertiesBloc>(
+                                                            context)
+                                                        .add(PropertiesFetch());
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            ThemeVariables.md),
+                                                    child: Text(
+                                                      "Try again",
+                                                      style: TextStyle(
+                                                        color: Theme.of(context)
+                                                                    .colorScheme
+                                                                    .brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: constraint.maxHeight,
+                                    child: RefreshIndicator(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      onRefresh: pullRefresh,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        clipBehavior: Clip.none,
+                                        itemCount: state.properties.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          Property property =
+                                              state.properties[index];
 
-                                    if (index == 0) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "My places",
-                                            style: ThemeVariables.sectionHeader,
-                                          ),
-                                          const SizedBox(
-                                            height: ThemeVariables.md,
-                                          ),
-                                          PropertyItem(
+                                          if (index == 0) {
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "My places",
+                                                  style: ThemeVariables
+                                                      .sectionHeader,
+                                                ),
+                                                const SizedBox(
+                                                  height: ThemeVariables.md,
+                                                ),
+                                                PropertyItem(
+                                                  property: property,
+                                                )
+                                              ],
+                                            );
+                                          }
+                                          return PropertyItem(
                                             property: property,
-                                          )
-                                        ],
-                                      );
-                                    }
-                                    return PropertyItem(
-                                      property: property,
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
                           }
 
                           if (state is PropertiesBlocEmptyState) {
@@ -282,7 +354,10 @@ class PropertyItem extends StatelessWidget {
                   bottom: ThemeVariables.sm,
                   right: ThemeVariables.sm,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      BlocProvider.of<PropertiesBloc>(context)
+                          .add(PropertiesDelete(property.id));
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(
                         ThemeVariables.xs,

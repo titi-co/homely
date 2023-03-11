@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/addBloc/add_bloc.dart';
+import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
+import 'package:homely/src/models/property_model.dart';
 
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/input.dart';
@@ -37,16 +39,22 @@ class _AddPlaceState extends State<AddPlace> {
   }
 
   _onAddButtonPressed() {
-    BlocProvider.of<AddBloc>(context).add(
-      AddButtonPressed(
-          name: nameController.text,
-          description: descriptionController.text,
-          street: streetController.text,
-          district: districtController.text,
-          city: cityController.text,
-          state: stateController.text,
-          image: image),
+    BlocProvider.of<PropertiesBloc>(context).add(
+      PropertyAdd(
+        Property(
+            "",
+            nameController.text,
+            descriptionController.text,
+            streetController.text,
+            districtController.text,
+            cityController.text,
+            stateController.text,
+            image,
+            ""),
+      ),
     );
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -77,113 +85,71 @@ class _AddPlaceState extends State<AddPlace> {
             ),
           ),
         ),
-        body: BlocBuilder<AddBloc, AddState>(
-          builder: (context, state) {
-            if (state is AddFailure) {
-              _onWidgetDidBuild(
-                () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.error),
-                    backgroundColor: Colors.red,
-                  ));
-                },
-              );
-
-              BlocProvider.of<AddBloc>(context).add((ClearState()));
-            }
-
-            if (state is AddSuccess) {
-              _onWidgetDidBuild(
-                () {
-                  Navigator.pop(context);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Place added successfully!"),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                },
-              );
-
-              BlocProvider.of<AddBloc>(context).add((ClearState()));
-            }
-
-            if (state is AddLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  value: null,
-                  color: Colors.red,
-                ),
-              );
-            }
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: ThemeVariables.md,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Add place",
-                        style: ThemeVariables.sheetTitle,
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.lg,
-                      ),
-                      Input(
-                        controller: nameController,
-                        label: "Place name",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: descriptionController,
-                        label: "Description",
-                        isMultline: true,
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: streetController,
-                        label: "Street",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: districtController,
-                        label: "District",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: cityController,
-                        label: "City",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      Input(
-                        controller: stateController,
-                        label: "State",
-                      ),
-                      const SizedBox(
-                        height: ThemeVariables.md,
-                      ),
-                      ImageUploader(
-                          callback: (value) => setState(() => image = value))
-                    ],
-                  ),
-                ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: ThemeVariables.md,
               ),
-            );
-          },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Add place",
+                    style: ThemeVariables.sheetTitle,
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.lg,
+                  ),
+                  Input(
+                    controller: nameController,
+                    label: "Place name",
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  Input(
+                    controller: descriptionController,
+                    label: "Description",
+                    isMultline: true,
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  Input(
+                    controller: streetController,
+                    label: "Street",
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  Input(
+                    controller: districtController,
+                    label: "District",
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  Input(
+                    controller: cityController,
+                    label: "City",
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  Input(
+                    controller: stateController,
+                    label: "State",
+                  ),
+                  const SizedBox(
+                    height: ThemeVariables.md,
+                  ),
+                  ImageUploader(
+                      callback: (value) => setState(() => image = value))
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

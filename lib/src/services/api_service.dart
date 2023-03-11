@@ -1,4 +1,4 @@
-import 'package:homely/src/models/property.dart';
+import 'package:homely/src/models/property_model.dart';
 
 abstract class AbstractAPIService {
   Future<List<Property>> getProperties();
