@@ -5,6 +5,10 @@ enum Themes { darkTheme, lightTheme }
 
 final theme = {
   Themes.darkTheme: ThemeData(
+    textSelectionTheme: const TextSelectionThemeData(
+      selectionColor: Colors.tealAccent,
+      selectionHandleColor: Colors.tealAccent,
+    ),
     scaffoldBackgroundColor: Colors.grey[850],
     colorScheme: ColorScheme(
       brightness: Brightness.dark,
@@ -23,6 +27,10 @@ final theme = {
     ),
   ),
   Themes.lightTheme: ThemeData(
+    textSelectionTheme: TextSelectionThemeData(
+      selectionColor: ThemeVariables.redColor,
+      selectionHandleColor: ThemeVariables.redColor,
+    ),
     colorScheme: ColorScheme(
       brightness: Brightness.light,
       primary: Colors.white,

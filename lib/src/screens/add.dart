@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/models/property_model.dart';
+import 'package:homely/src/screens/edit.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/input.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,13 +28,9 @@ class _AddPlaceState extends State<AddPlace> {
   final stateController = TextEditingController();
   String image = "";
 
-  set string(String value) => setState(() => image = value);
+  final _formKey = GlobalKey<FormState>();
 
-  void _onWidgetDidBuild(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
-  }
+  set string(String value) => setState(() => image = value);
 
   _onAddButtonPressed() {
     BlocProvider.of<PropertiesBloc>(context).add(
@@ -57,6 +54,7 @@ class _AddPlaceState extends State<AddPlace> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: AppBar(elevation: 0),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(ThemeVariables.md),
           child: FilledButton(
@@ -64,7 +62,11 @@ class _AddPlaceState extends State<AddPlace> {
               backgroundColor: MaterialStateProperty.all<Color>(
                   Theme.of(context).colorScheme.secondary),
             ),
-            onPressed: _onAddButtonPressed,
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _onAddButtonPressed();
+              }
+            },
             child: Padding(
               padding: const EdgeInsets.all(ThemeVariables.md),
               child: Text(
@@ -84,138 +86,82 @@ class _AddPlaceState extends State<AddPlace> {
               padding: const EdgeInsets.symmetric(
                 horizontal: ThemeVariables.md,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Add place",
-                    style: ThemeVariables.sheetTitle,
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.lg,
-                  ),
-                  Input(
-                    controller: nameController,
-                    label: "Place name",
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.md,
-                  ),
-                  Input(
-                    controller: descriptionController,
-                    label: "Description",
-                    isMultline: true,
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.md,
-                  ),
-                  Input(
-                    controller: streetController,
-                    label: "Street",
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.md,
-                  ),
-                  Input(
-                    controller: districtController,
-                    label: "District",
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.md,
-                  ),
-                  Input(
-                    controller: cityController,
-                    label: "City",
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.md,
-                  ),
-                  Input(
-                    controller: stateController,
-                    label: "State",
-                  ),
-                  const SizedBox(
-                    height: ThemeVariables.md,
-                  ),
-                  ImageUploader(
-                      callback: (value) => setState(() => image = value))
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Add place",
+                      style: ThemeVariables.sheetTitle,
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.lg,
+                    ),
+                    Input(
+                      maxLength: 24,
+                      capitalization: TextCapitalization.sentences,
+                      controller: nameController,
+                      label: "Place name",
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.md,
+                    ),
+                    Input(
+                      type: TextInputType.multiline,
+                      capitalization: TextCapitalization.sentences,
+                      controller: descriptionController,
+                      label: "Description",
+                      isMultline: true,
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.md,
+                    ),
+                    Input(
+                      maxLength: 20,
+                      capitalization: TextCapitalization.sentences,
+                      controller: streetController,
+                      label: "Street",
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.md,
+                    ),
+                    Input(
+                      maxLength: 20,
+                      capitalization: TextCapitalization.sentences,
+                      controller: districtController,
+                      label: "District",
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.md,
+                    ),
+                    Input(
+                      maxLength: 20,
+                      capitalization: TextCapitalization.sentences,
+                      controller: cityController,
+                      label: "City",
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.md,
+                    ),
+                    Input(
+                      maxLength: 20,
+                      capitalization: TextCapitalization.sentences,
+                      controller: stateController,
+                      label: "State",
+                    ),
+                    const SizedBox(
+                      height: ThemeVariables.md,
+                    ),
+                    ImageUploader(
+                        callback: (value) => setState(() => image = value))
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-typedef void StringCallback(String val);
-
-class ImageUploader extends StatefulWidget {
-  const ImageUploader({
-    super.key,
-    required this.callback,
-  });
-
-  final StringCallback callback;
-
-  @override
-  State<ImageUploader> createState() => _ImageUploaderState();
-}
-
-class _ImageUploaderState extends State<ImageUploader> {
-  File? image;
-
-  Future pickImage() async {
-    try {
-      final image = await ImagePicker()
-          .pickImage(source: ImageSource.camera, imageQuality: 1);
-      if (image == null) return;
-      final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
-      List<int> imageBytes = await this.image!.readAsBytes();
-
-      print(imageBytes.length);
-
-      String base64Image = base64Encode(imageBytes);
-
-      widget.callback(base64Image);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    } catch (e) {
-      print('Something went wrong: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: pickImage,
-          child: Chip(
-            labelPadding: const EdgeInsets.all(8),
-            avatar: CircleAvatar(
-              backgroundColor: image != null ? Colors.green : Colors.teal,
-              child: image != null
-                  ? const Icon(
-                      Icons.done,
-                      color: Colors.white,
-                    )
-                  : const Icon(
-                      Icons.upload,
-                      color: Colors.white,
-                    ),
-            ),
-            label: Text(image != null ? image!.path : 'Send image'),
-          ),
-        ),
-        const SizedBox(
-          height: ThemeVariables.md,
-        ),
-        image != null ? Image.file(image!) : const Text("No image selected")
-      ],
     );
   }
 }
