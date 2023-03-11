@@ -31,7 +31,7 @@ class _SignUpState extends State<SignUp> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
-            child: LoginForm(
+            child: SignupForm(
               signUpBloc: BlocProvider.of<SignUpBloc>(context),
             ),
           ),
@@ -41,8 +41,8 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class SignupForm extends StatefulWidget {
+  const SignupForm({
     super.key,
     required this.signUpBloc,
   });
@@ -50,10 +50,10 @@ class LoginForm extends StatefulWidget {
   final SignUpBloc signUpBloc;
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignupForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends State<SignupForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -65,44 +65,11 @@ class _LoginFormState extends State<LoginForm> {
     ));
   }
 
-  void _onWidgetDidBuild(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
-          if (state is SignUpFailure) {
-            _onWidgetDidBuild(
-              () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(state.error),
-                  backgroundColor: Colors.red,
-                ));
-              },
-            );
-
-            BlocProvider.of<SignUpBloc>(context).add((ClearError()));
-          }
-
-          if (state is SignUpSuccess) {
-            _onWidgetDidBuild(
-              () {
-                Navigator.of(context).pop();
-
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Account Created Successfully!"),
-                  backgroundColor: Colors.green,
-                ));
-              },
-            );
-
-            BlocProvider.of<SignUpBloc>(context).add((ClearError()));
-          }
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

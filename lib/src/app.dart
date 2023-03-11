@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/propertyRepository/firebase_property_repository.dart';
-
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/loginBloc/login_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/signupBloc/signup_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
+import 'package:homely/src/containers/splash_container.dart';
 import 'package:homely/src/screens/add.dart';
 import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/screens/edit.dart';
@@ -15,7 +15,6 @@ import 'package:homely/src/screens/login.dart';
 import 'package:homely/src/screens/singup.dart';
 import 'package:homely/src/services/navigation_service.dart';
 import 'package:homely/src/services/snackbar_service.dart';
-import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/loading.dart';
 
 class App extends StatefulWidget {
@@ -47,7 +46,8 @@ class _AppState extends State<App> {
               LoginBloc(authBloc: BlocProvider.of<AuthBloc>(context)),
         ),
         BlocProvider<SignUpBloc>(
-          create: (context) => SignUpBloc(),
+          create: (context) =>
+              SignUpBloc(authBloc: BlocProvider.of<AuthBloc>(context)),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
@@ -71,7 +71,7 @@ class _AppState extends State<App> {
                 builder: (context, state) {
                   if (state is AuthInitial) {
                     BlocProvider.of<AuthBloc>(context).add(AppStarted());
-                    return const Splash();
+                    return const SplashContainer();
                   }
 
                   if (state is AuthUnauthorized) {
@@ -79,6 +79,7 @@ class _AppState extends State<App> {
                   }
 
                   if (state is AuthSuccess) {
+                    // ? Fetch data on AuthSuccess
                     BlocProvider.of<PropertiesBloc>(context)
                         .add(PropertiesFetch());
                     return const Home();
@@ -95,28 +96,6 @@ class _AppState extends State<App> {
           }
           return Container();
         },
-      ),
-    );
-  }
-}
-
-class Splash extends StatelessWidget {
-  const Splash({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: ThemeVariables.redColor,
-        child: Center(
-            child: Text(
-          "home.ly",
-          style: ThemeVariables.sheetTitle.copyWith(
-            color: Colors.white,
-          ),
-        )),
       ),
     );
   }

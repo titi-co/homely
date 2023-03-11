@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
+import 'package:homely/src/services/navigation_service.dart';
+import 'package:homely/src/services/snackbar_service.dart';
 import 'package:homely/src/utils/firebase.dart';
 
 part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(SignUpInitial()) {
+  final AuthBloc authBloc;
+  SignUpBloc({required this.authBloc}) : super(SignUpInitial()) {
     on<SignUpEvent>((event, emit) async {
       if (event is SignUpButtonPressed) {
         try {
@@ -20,11 +25,20 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
                   email: event.username, password: event.password);
 
           emit(SignUpSuccess());
+          SnackBarService.instance
+              .showSnackBar("User created successfully!", Colors.green);
+          authBloc.add(LoggedIn());
+          NavigationService.instance.goback();
         } on FirebaseAuthException catch (error) {
-          emit(SignUpFailure(
-              error: FireBaseUtils().getMessageFromErrorCode(error)));
+          SnackBarService.instance.showSnackBar(
+              FireBaseUtils().getMessageFromErrorCode(error), Colors.red);
+
+          emit(SignUpInitial());
         } catch (error) {
-          emit(SignUpFailure(error: error.toString()));
+          SnackBarService.instance.showSnackBar(
+              FireBaseUtils().getMessageFromErrorCode(error), Colors.red);
+
+          emit(SignUpInitial());
         }
       }
 

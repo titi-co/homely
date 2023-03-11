@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
-import 'package:get/route_manager.dart';
 import 'package:homely/propertyRepository/property_repository.dart';
 import 'package:homely/src/entities/property_entity.dart';
 import 'package:homely/src/models/property_model.dart';
