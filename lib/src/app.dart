@@ -12,6 +12,8 @@ import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/screens/home.dart';
 import 'package:homely/src/screens/login.dart';
 import 'package:homely/src/screens/singup.dart';
+import 'package:homely/src/services/navigation_service.dart';
+import 'package:homely/src/services/snackbar_service.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/loading.dart';
 
@@ -57,6 +59,8 @@ class _AppState extends State<App> {
         builder: (context, state) {
           if (state is ThemeStateLoaded) {
             return MaterialApp(
+              navigatorKey: NavigationService.instance.navigationKey,
+              scaffoldMessengerKey: SnackBarService.instance.scaffoldKey,
               debugShowCheckedModeBanner: false,
               title: 'home.ly',
               theme: state.themeData,

@@ -10,7 +10,9 @@ import 'package:homely/src/widgets/input.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddPlace extends StatefulWidget {
-  const AddPlace({super.key});
+  const AddPlace({super.key, required this.property});
+
+  final Property property;
 
   static const routeName = "/add";
 
@@ -68,7 +70,7 @@ class _AddPlaceState extends State<AddPlace> {
             child: Padding(
               padding: const EdgeInsets.all(ThemeVariables.md),
               child: Text(
-                "Add place",
+                "Edit place",
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.brightness ==
                             Brightness.dark
