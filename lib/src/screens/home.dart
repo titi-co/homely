@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
+import 'package:homely/src/containers/properties_loading_container.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/theme/constants.dart';
@@ -96,30 +97,7 @@ class _HomeState extends State<Home> {
                       BlocBuilder<PropertiesBloc, PropertiesBlocState>(
                         builder: (context, state) {
                           if (state is PropertiesBlocLoadingState) {
-                            return Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "My places",
-                                    style: ThemeVariables.sectionHeader,
-                                  ),
-                                  const SizedBox(
-                                    height: ThemeVariables.md,
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        value: null,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
+                            return const PropertiesLoadingContainer();
                           }
 
                           if (state is PropertiesBlocLoadedState) {
@@ -267,6 +245,38 @@ class _HomeState extends State<Home> {
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+class a extends StatelessWidget {
+  const a({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "My places",
+            style: ThemeVariables.sectionHeader,
+          ),
+          const SizedBox(
+            height: ThemeVariables.md,
+          ),
+          Expanded(
+            child: Center(
+              child: CircularProgressIndicator(
+                value: null,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

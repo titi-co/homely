@@ -32,7 +32,7 @@ class _SignOutState extends State<SignOut> {
               Theme.of(context).colorScheme.secondary),
         ),
         onPressed: () {
-          BlocProvider.of<PropertiesBloc>(context).close();
+          BlocProvider.of<PropertiesBloc>(context).unsubscribe();
           BlocProvider.of<AuthBloc>(context).add(LoggedOut());
         },
         child: Padding(

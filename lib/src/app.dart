@@ -79,6 +79,8 @@ class _AppState extends State<App> {
                   }
 
                   if (state is AuthSuccess) {
+                    BlocProvider.of<PropertiesBloc>(context)
+                        .add(PropertiesFetch());
                     return const Home();
                   }
 

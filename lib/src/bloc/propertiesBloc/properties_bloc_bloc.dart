@@ -38,9 +38,7 @@ class PropertiesBloc extends Bloc<PropertiesBlocEvent, PropertiesBlocState> {
     });
   }
 
-  @override
-  Future<void> close() async {
+  unsubscribe() async {
     _propertySubscription?.cancel();
-    super.close();
   }
 }
