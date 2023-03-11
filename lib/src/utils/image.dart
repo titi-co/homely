@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 class ImageUtils {
   Image? imageFromBase64String({String? base64String, fit = BoxFit.cover}) {
-    if (base64String == null) return null;
+    if (base64String == null || !isAValidBase64Image(base64String)) return null;
     base64String = base64String.replaceAll('data:image/jpeg;base64,', '');
 
     return Image(

@@ -20,9 +20,9 @@ class PropertiesBloc extends Bloc<PropertiesBlocEvent, PropertiesBlocState> {
         emit(PropertiesBlocLoadingState());
         _propertySubscription?.cancel();
         _propertySubscription = propertyRepository.properties().listen(
-          (todos) {
+          (properties) {
             add(
-              PropertiesUpdated(todos),
+              PropertiesUpdated(properties),
             );
           },
         );

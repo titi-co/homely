@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:homely/src/bloc/addBloc/add_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
 import 'package:homely/src/models/property_model.dart';
-
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/input.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,9 +66,7 @@ class _AddPlaceState extends State<AddPlace> {
               backgroundColor: MaterialStateProperty.all<Color>(
                   Theme.of(context).colorScheme.secondary),
             ),
-            onPressed: BlocProvider.of<AddBloc>(context).state is! AddLoading
-                ? _onAddButtonPressed
-                : null,
+            onPressed: _onAddButtonPressed,
             child: Padding(
               padding: const EdgeInsets.all(ThemeVariables.md),
               child: Text(
@@ -175,11 +170,14 @@ class _ImageUploaderState extends State<ImageUploader> {
 
   Future pickImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      final image = await ImagePicker()
+          .pickImage(source: ImageSource.camera, imageQuality: 1);
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
       List<int> imageBytes = await this.image!.readAsBytes();
+
+      print(imageBytes.length);
 
       String base64Image = base64Encode(imageBytes);
 

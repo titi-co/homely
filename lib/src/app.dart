@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/propertyRepository/firebase_property_repository.dart';
-import 'package:homely/src/bloc/addBloc/add_bloc.dart';
+
 import 'package:homely/src/bloc/authBloc/auth_bloc.dart';
 import 'package:homely/src/bloc/loginBloc/login_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
-import 'package:homely/src/bloc/propertyBloc/property_bloc_bloc.dart';
 import 'package:homely/src/bloc/signupBloc/signup_bloc.dart';
 import 'package:homely/src/bloc/themeBloc/theme_bloc.dart';
 import 'package:homely/src/screens/add.dart';
@@ -43,9 +42,6 @@ class _AppState extends State<App> {
               PropertiesBloc(propertyRepository: FirebasePropertyRepository())
                 ..add(PropertiesFetch()),
         ),
-        BlocProvider<PropertyBloc>(
-          create: (context) => PropertyBloc(),
-        ),
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(),
         ),
@@ -55,9 +51,6 @@ class _AppState extends State<App> {
         ),
         BlocProvider<SignUpBloc>(
           create: (context) => SignUpBloc(),
-        ),
-        BlocProvider<AddBloc>(
-          create: (context) => AddBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

@@ -9,6 +9,10 @@ import 'package:homely/src/screens/details.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/theme/theme.dart';
 import 'package:homely/src/utils/image.dart';
+import 'package:homely/src/widgets/missing_image.dart';
+import 'package:homely/src/widgets/property_item.dart';
+import 'package:homely/src/widgets/signout_button.dart';
+import 'package:homely/src/widgets/toggle_mode.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -217,12 +221,33 @@ class _HomeState extends State<Home> {
                                                   height: ThemeVariables.md,
                                                 ),
                                                 PropertyItem(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Details(
+                                                          property: property,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                   property: property,
                                                 )
                                               ],
                                             );
                                           }
                                           return PropertyItem(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => Details(
+                                                    property: property,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                             property: property,
                                           );
                                         },
@@ -230,72 +255,6 @@ class _HomeState extends State<Home> {
                                     ),
                                   );
                           }
-
-                          if (state is PropertiesBlocEmptyState) {
-                            return Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "My places",
-                                    style: ThemeVariables.sectionHeader,
-                                  ),
-                                  const SizedBox(
-                                    height: ThemeVariables.md,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "You don't have any places",
-                                          style: ThemeVariables.sectionHeader,
-                                        ),
-                                        const SizedBox(
-                                          height: ThemeVariables.md,
-                                        ),
-                                        SizedBox(
-                                          width: double.infinity,
-                                          child: ElevatedButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                          Color>(
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary),
-                                            ),
-                                            onPressed: () {
-                                              BlocProvider.of<PropertiesBloc>(
-                                                      context)
-                                                  .add(PropertiesFetch());
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(
-                                                  ThemeVariables.md),
-                                              child: Text(
-                                                "Try again",
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                              .colorScheme
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.black
-                                                      : Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-
                           return Container();
                         },
                       )
@@ -308,197 +267,5 @@ class _HomeState extends State<Home> {
         }),
       ),
     );
-  }
-}
-
-class PropertyItem extends StatelessWidget {
-  const PropertyItem({
-    super.key,
-    required this.property,
-  });
-
-  final Property property;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Details(
-                property: property,
-              ),
-            ));
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 350,
-            width: double.infinity,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.transparent,
-            ),
-            child: Stack(
-              children: [
-                if (property.image == null || property.image == "")
-                  const MissingImage()
-                else
-                  ImageUtils().imageFromBase64String(
-                          base64String: property.image) ??
-                      const MissingImage(),
-                Positioned(
-                  bottom: ThemeVariables.sm,
-                  right: ThemeVariables.sm,
-                  child: GestureDetector(
-                    onTap: () {
-                      BlocProvider.of<PropertiesBloc>(context)
-                          .add(PropertiesDelete(property.id));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        ThemeVariables.xs,
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Theme.of(context).colorScheme.surfaceVariant),
-                      child: const Icon(
-                        Icons.delete_outline,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: ThemeVariables.sm,
-          ),
-          Text(
-            property.name!,
-            style: ThemeVariables.bodyHeader,
-          ),
-          const SizedBox(
-            height: ThemeVariables.xs,
-          ),
-          Text(
-            "${property.street} - ${property.district}",
-            style: ThemeVariables.bodyRegular,
-          ),
-          const SizedBox(
-            height: ThemeVariables.xs,
-          ),
-          const Divider(
-            thickness: 1,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class MissingImage extends StatelessWidget {
-  const MissingImage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.secondary,
-      alignment: Alignment.center,
-      child: Text(
-        "Image missing...",
-        style: ThemeVariables.sheetTitle.copyWith(
-            color: Theme.of(context).colorScheme.brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white),
-      ),
-    );
-  }
-}
-
-class ToggleMode extends StatefulWidget {
-  const ToggleMode({
-    super.key,
-  });
-
-  @override
-  State<ToggleMode> createState() => _ToggleModeState();
-}
-
-class _ToggleModeState extends State<ToggleMode> {
-  late bool isLight;
-  @override
-  void initState() {
-    isLight = true;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(isLight
-              ? ThemeVariables.darkModeColor
-              : ThemeVariables.lightModeColor),
-        ),
-        onPressed: () {
-          BlocProvider.of<ThemeBloc>(context).add(ThemeChanged(
-              theme: isLight ? Themes.darkTheme : Themes.lightTheme));
-
-          setState(() {
-            isLight = !isLight;
-          });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(ThemeVariables.xs),
-          child: Icon(
-            isLight ? Icons.dark_mode : Icons.wb_sunny_outlined,
-            color: isLight ? Colors.white : Colors.black,
-          ),
-        ));
-  }
-}
-
-class SignOut extends StatefulWidget {
-  const SignOut({
-    super.key,
-  });
-
-  @override
-  State<SignOut> createState() => _SignOutState();
-}
-
-class _SignOutState extends State<SignOut> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all<double>(0),
-          backgroundColor: MaterialStateProperty.all<Color>(
-              Theme.of(context).colorScheme.secondary),
-        ),
-        onPressed: () {
-          BlocProvider.of<AuthBloc>(context).add(LoggedOut());
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(ThemeVariables.xs),
-          child: Icon(
-            Icons.logout,
-            color: Theme.of(context).colorScheme.brightness == Brightness.light
-                ? Colors.white
-                : Colors.black,
-          ),
-        ));
   }
 }
