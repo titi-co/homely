@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homely/src/bloc/propertiesBloc/properties_bloc_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:homely/src/screens/edit.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/utils/image.dart';
 import 'package:homely/src/widgets/missing_image.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 
 class PropertyItem extends StatelessWidget {
   const PropertyItem({
@@ -35,12 +37,7 @@ class PropertyItem extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ImageUtils().imageFromBase64String(
-                          base64String: property.image, fit: BoxFit.cover) ??
-                      const MissingImage(),
-                ),
+                CachedImage(image: property.image),
                 Positioned(
                   bottom: ThemeVariables.sm,
                   right: ThemeVariables.sm,
@@ -117,6 +114,36 @@ class PropertyItem extends StatelessWidget {
             thickness: 1,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CachedImage extends StatelessWidget {
+  const CachedImage({
+    super.key,
+    required this.image,
+  });
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: CachedNetworkImage(
+        fit: BoxFit.cover,
+        imageUrl: image,
+        progressIndicatorBuilder: (context, url, downloadProgress) => SizedBox(
+          width: double.infinity,
+          child: Center(
+            child: CircularProgressIndicator(
+              value: downloadProgress.progress,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => const MissingImage(),
       ),
     );
   }

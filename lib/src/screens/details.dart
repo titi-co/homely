@@ -4,6 +4,7 @@ import 'package:homely/src/screens/home.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/utils/image.dart';
 import 'package:homely/src/widgets/missing_image.dart';
+import 'package:homely/src/widgets/property_item.dart';
 import 'package:sliver_header_delegate/sliver_header_delegate.dart';
 
 class Details extends StatefulWidget {
@@ -60,11 +61,9 @@ class _DetailsState extends State<Details> {
                   statusBarHeight: MediaQuery.of(context).padding.top,
                   expandedHeight: MediaQuery.of(context).size.height / 3,
                   background: MutableBackground(
-                    expandedWidget: widget.property!.image == "" ||
-                            widget.property!.image == null
-                        ? const MissingImage()
-                        : ImageUtils().imageFromBase64String(
-                            base64String: widget.property!.image),
+                    expandedWidget: CachedImage(
+                      image: widget.property!.image,
+                    ),
                   ),
                 ),
               ),
@@ -99,11 +98,11 @@ class PropertyDetailsBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                property!.name ?? "Title...",
+                property!.name,
                 style: ThemeVariables.sectionHeader,
               ),
               Text(
-                property!.description ?? "Description...",
+                property!.description,
                 style: ThemeVariables.bodyRegular,
               ),
               const SizedBox(
@@ -121,7 +120,7 @@ class PropertyDetailsBody extends StatelessWidget {
                 style: ThemeVariables.bodyHeader,
               ),
               Text(
-                property!.street ?? "Street...",
+                property!.street,
                 style: ThemeVariables.bodyRegular,
               ),
               const SizedBox(
@@ -132,7 +131,7 @@ class PropertyDetailsBody extends StatelessWidget {
                 style: ThemeVariables.bodyHeader,
               ),
               Text(
-                property!.district ?? "District...",
+                property!.district,
                 style: ThemeVariables.bodyRegular,
               ),
               const SizedBox(
@@ -143,7 +142,7 @@ class PropertyDetailsBody extends StatelessWidget {
                 style: ThemeVariables.bodyHeader,
               ),
               Text(
-                property!.city ?? "City...",
+                property!.city,
                 style: ThemeVariables.bodyRegular,
               ),
               const SizedBox(
@@ -154,7 +153,7 @@ class PropertyDetailsBody extends StatelessWidget {
                 style: ThemeVariables.bodyHeader,
               ),
               Text(
-                property!.state ?? "State...",
+                property!.state,
                 style: ThemeVariables.bodyRegular,
               ),
             ],

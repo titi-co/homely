@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,9 +32,11 @@ class PropertiesBloc extends Bloc<PropertiesBlocEvent, PropertiesBlocState> {
       } else if (event is PropertiesDelete) {
         propertyRepository.deleteProperty(event.id);
       } else if (event is PropertyAdd) {
-        propertyRepository.addProperty(event.property);
+        emit(PropertiesBlocLoadingState());
+        propertyRepository.addProperty(event.property, event.image);
       } else if (event is PropertyUpdate) {
-        propertyRepository.updateProperty(event.property);
+        emit(PropertiesBlocLoadingState());
+        propertyRepository.updateProperty(event.property, event.image);
       }
     });
   }

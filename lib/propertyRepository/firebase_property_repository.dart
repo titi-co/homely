@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:homely/propertyRepository/property_repository.dart';
 import 'package:homely/src/entities/property_entity.dart';
@@ -16,12 +19,22 @@ class FirebasePropertyRepository implements PropertyRepository {
   final propertiesCollection =
       FirebaseFirestore.instance.collection('properties');
 
+  final firebaseStorage = FirebaseStorage.instance;
+
   @override
-  Future<void> addProperty(Property property) async {
+  Future<void> addProperty(Property property, File image) async {
     try {
+      var snapshot = await firebaseStorage
+          .ref()
+          .child(
+              'images/${auth.currentUser!.uid} - ${DateTime.now().toString()}')
+          .putFile(image);
+
+      var url = await snapshot.ref.getDownloadURL();
+
       await propertiesCollection
           .add(property
-              .copyWith(uid: auth.currentUser!.uid)
+              .copyWith(uid: auth.currentUser!.uid, image: url)
               .toEntity()
               .toDocument())
           .then((value) {
@@ -33,7 +46,7 @@ class FirebasePropertyRepository implements PropertyRepository {
       });
     } catch (error) {
       SnackBarService.instance.showSnackBar(
-        "Error adding place!",
+        "Error adding place! - $error",
         Colors.red,
       );
     }
@@ -78,12 +91,20 @@ class FirebasePropertyRepository implements PropertyRepository {
   }
 
   @override
-  Future<void> updateProperty(Property update) async {
+  Future<void> updateProperty(Property update, File image) async {
     try {
+      var snapshot = await firebaseStorage
+          .ref()
+          .child(
+              'images/${auth.currentUser!.uid} - ${DateTime.now().toString()}')
+          .putFile(image);
+
+      var url = await snapshot.ref.getDownloadURL();
+
       await propertiesCollection
           .doc(update.id)
           .update(update
-              .copyWith(uid: auth.currentUser!.uid)
+              .copyWith(uid: auth.currentUser!.uid, image: url)
               .toEntity()
               .toDocument())
           .then((value) {

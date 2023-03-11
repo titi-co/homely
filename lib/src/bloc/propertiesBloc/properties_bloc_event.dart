@@ -23,12 +23,14 @@ class PropertiesUpdated extends PropertiesBlocEvent {
 
 class PropertyAdd extends PropertiesBlocEvent {
   final Property property;
+  final File image;
 
-  const PropertyAdd(this.property);
+  const PropertyAdd(this.property, this.image);
 }
 
 class PropertyUpdate extends PropertiesBlocEvent {
   final Property property;
+  final File image;
 
-  const PropertyUpdate(this.property);
+  const PropertyUpdate(this.property, this.image);
 }

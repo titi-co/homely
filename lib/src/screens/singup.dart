@@ -101,6 +101,7 @@ class _LoginFormState extends State<SignupForm> {
                 child: Column(
                   children: [
                     Input(
+                      type: TextInputType.emailAddress,
                       label: "Email",
                       controller: _emailController,
                     ),
@@ -108,6 +109,7 @@ class _LoginFormState extends State<SignupForm> {
                       height: ThemeVariables.md,
                     ),
                     Input(
+                      obscure: true,
                       label: "Password",
                       controller: _passwordController,
                     ),

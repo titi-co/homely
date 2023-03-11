@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:homely/src/services/snackbar_service.dart';
 import 'package:homely/src/theme/constants.dart';
+import 'package:homely/src/widgets/property_item.dart';
 import 'package:image_picker/image_picker.dart';
 
-typedef StringCallback = void Function(String val);
+typedef FileCallback = void Function(File val);
 
 class ImageUploader extends StatefulWidget {
   const ImageUploader({
@@ -15,7 +16,7 @@ class ImageUploader extends StatefulWidget {
     required this.callback,
   });
 
-  final StringCallback callback;
+  final FileCallback callback;
 
   @override
   State<ImageUploader> createState() => _ImageUploaderState();
@@ -28,19 +29,16 @@ class _ImageUploaderState extends State<ImageUploader> {
     try {
       final image = await ImagePicker().pickImage(
         source: ImageSource.camera,
-        imageQuality: 40,
-        requestFullMetadata: false,
-        maxHeight: 400,
-        maxWidth: 400,
       );
-      if (image == null) return;
-      final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
-      List<int> imageBytes = await this.image!.readAsBytes();
 
-      String base64Image = base64Encode(imageBytes);
+      if (image != null) {
+        final file = File(image.path);
+        widget.callback(file);
 
-      widget.callback(base64Image);
+        setState(() {
+          this.image = file;
+        });
+      }
     } on PlatformException catch (e) {
       SnackBarService.instance
           .showSnackBar("Something went wrong: $e", Colors.red);
