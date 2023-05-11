@@ -6,6 +6,7 @@ import 'package:homely/src/containers/add_form_container.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/theme/constants.dart';
 import 'package:homely/src/widgets/image_uploader.dart';
+import 'package:uuid/uuid.dart';
 
 class AddPlace extends StatefulWidget {
   const AddPlace({super.key});
@@ -33,7 +34,7 @@ class _AddPlaceState extends State<AddPlace> {
     BlocProvider.of<PropertiesBloc>(context).add(
       PropertyAdd(
         Property(
-            "",
+            Uuid().v4(),
             nameController.text,
             descriptionController.text,
             streetController.text,

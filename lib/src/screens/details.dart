@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:homely/src/containers/details_body_container.dart';
 import 'package:homely/src/models/property_model.dart';
 import 'package:homely/src/theme/constants.dart';
+import 'package:homely/src/utils/sqlite.dart';
 import 'package:homely/src/widgets/property_item.dart';
 import 'package:sliver_header_delegate/sliver_header_delegate.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Details extends StatefulWidget {
   const Details({super.key, this.property});
