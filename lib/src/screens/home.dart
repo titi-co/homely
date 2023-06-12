@@ -43,16 +43,19 @@ class _HomeState extends State<Home> {
             const SizedBox(
               width: ThemeVariables.xs,
             ),
-            Text(
-              "home.ly",
-              style: ThemeVariables.logo,
+            Expanded(
+              child: Text(
+                "home.ly",
+                style: ThemeVariables.logo,
+
+              ),
             ),
           ],
         ),
         centerTitle: false,
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.md),
+            padding: const EdgeInsets.symmetric(horizontal: ThemeVariables.xs),
             child: Row(
               children: const [
                 ToggleMode(),

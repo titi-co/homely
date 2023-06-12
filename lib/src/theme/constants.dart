@@ -20,7 +20,7 @@ class ThemeVariables {
 
   static TextStyle logo = GoogleFonts.raleway(
     textStyle: const TextStyle(
-      fontSize: ThemeVariables.sheet,
+      fontSize: ThemeVariables.header,
       fontWeight: FontWeight.w900,
     ),
   );
